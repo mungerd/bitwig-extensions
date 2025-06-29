@@ -91,6 +91,7 @@ public class MiniLab3Extension extends ControllerExtension {
     private ClipLaunchingLayer clipLaunchingLayer;
     private DrumPadLayer drumPadLayer;
     private ArturiaModeLayer arturiaModeLayer;
+    private KompleteKontrolLayer kompleteKontrolLayer;
     
     private Scene sceneTrackItem;
     
@@ -224,6 +225,7 @@ public class MiniLab3Extension extends ControllerExtension {
         clipLaunchingLayer = new ClipLaunchingLayer(this);
         drumPadLayer = new DrumPadLayer(this);
         arturiaModeLayer = new ArturiaModeLayer(this);
+        kompleteKontrolLayer = new KompleteKontrolLayer(this);
         
         mainLayer.activate();
         clipLaunchingLayer.activate();
@@ -338,12 +340,22 @@ public class MiniLab3Extension extends ControllerExtension {
             case "f000206b7f420200406201f7": // Arturia Mode
                 drumPadLayer.deactivate();
                 clipLaunchingLayer.deactivate();
+                kompleteKontrolLayer.deactivate();
                 arturiaModeLayer.activate();
                 break;
             case "f000206b7f420200406202f7": // In DAW Mode
                 arturiaModeLayer.deactivate();
                 drumPadLayer.activate();
                 clipLaunchingLayer.activate();
+                kompleteKontrolLayer.deactivate();
+                break;
+            case "f000206b7f420200406203f7": // Komplete Kontrol Mode
+            case "f000206b7f420200400102f7":
+                drumPadLayer.deactivate();
+                clipLaunchingLayer.deactivate();
+                arturiaModeLayer.deactivate();
+                kompleteKontrolLayer.activate();
+                debugHost.println("Komplete Kontrol Mode Activated");
                 break;
             case "f000206b7f420200400100f7": // Confirm in Arturia Mode
                 sysExHandler.enableProcessing();
@@ -942,6 +954,7 @@ public class MiniLab3Extension extends ControllerExtension {
         if (channel == 9) {
             drumPadLayer.notifyNote(sb, msg.getData1());
         }
+        kompleteKontrolLayer.notifyMidi(msg);
     }
     
     public HardwareSurface getSurface() {
