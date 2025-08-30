@@ -281,7 +281,7 @@ public class MiniLab3Extension extends ControllerExtension {
         layer.bind(control, value -> {
             final int intValue = (int)(value * 0x7F);
             final String strValue = String.format("%d", intValue);
-            cursorTrack.sendMidi(status | channel, isCC ? cc : intValue, isCC ? intValue : 0);
+            noteInput.sendRawMidiEvent(status | channel, isCC ? cc : intValue, isCC ? intValue : 0);
             if (control instanceof AbsoluteHardwareKnob)
                 oled.sendEncoderInfo(DisplayMode.PARAM, value, text, strValue);
             else
